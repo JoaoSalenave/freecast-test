@@ -39,9 +39,10 @@ class Movie(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     image = models.URLField()
-    release_date = models.DateField()
+    release_date = models.DateField(null=True, blank=True)
     imdb_rating = models.FloatField()
-    kinopoisk_rating = models.FloatField()
+    kinopoisk_rating = models.FloatField(null=True, blank=True, default=0)
+    release_year = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.title
