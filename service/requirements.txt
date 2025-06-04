@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+pydantic
+Django>=4.0
+requests
