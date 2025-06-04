@@ -91,6 +91,21 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+from celery.schedules import crontab, schedule
+
+CELERY_BEAT_SCHEDULE = {
+
+    "update-ratings-daily": {
+        "task": "catalog.tasks.update_ratings_task",
+        "schedule": crontab(minute=0, hour=0),
+    },
+
+    "validate-sources-every-6h": {
+        "task": "catalog.tasks.validate_sources_task",
+        "schedule": crontab(minute=0, hour="*/6"),
+    },
+}

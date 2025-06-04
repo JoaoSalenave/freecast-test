@@ -57,6 +57,7 @@ class Source(models.Model):
     episode = models.ForeignKey(Episode, related_name='sources', null=True, blank=True, on_delete=models.CASCADE)
     url = models.URLField()
     source_type = models.CharField(max_length=20, choices=SOURCE_TYPE_CHOICES)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         target = self.movie or self.episode
