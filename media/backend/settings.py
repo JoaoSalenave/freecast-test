@@ -1,13 +1,17 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
-SECRET_KEY = 'django-insecure-vty#52ln6ub)+dt8-$e5!ej8th$dnc!*$^l_dh$jwv!2j@v%8-'
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("1", "true", "yes")
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
 
 
 
@@ -79,7 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv("DJANGO_TIME_ZONE", "UTC")
 
 USE_I18N = True
 
@@ -92,8 +96,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 
 from celery.schedules import crontab, schedule
 

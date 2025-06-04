@@ -1,10 +1,15 @@
 import os
 import sys
+from pathlib import Path
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media'))
-sys.path.insert(0, BASE_DIR)
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+
+sys.path.insert(0, str(BASE_DIR))
 
 from celery import Celery
 
