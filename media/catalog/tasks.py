@@ -46,7 +46,6 @@ def import_shows_task():
             },
         )
 
-        # Create two seasons: Season 1 and Season 2
         for season_number in [1, 2]:
             season_obj, _ = Season.objects.get_or_create(
                 show=show_obj,
@@ -54,7 +53,6 @@ def import_shows_task():
                 defaults={"description": f"Placeholder season {season_number}"},
             )
 
-            # For each season, create two episodes: Episode 1 and Episode 2
             for ep_number in [1, 2]:
                 ep_title = f"Episode {ep_number} (Placeholder)"
                 episode_date = release_date or date.today()
@@ -68,7 +66,6 @@ def import_shows_task():
                     },
                 )
 
-                # Create a placeholder Source for each Episode
                 Source.objects.get_or_create(
                     episode=episode_obj,
                     url="https://example.com/episode-placeholder.mp4",
@@ -110,7 +107,6 @@ def import_movies_task():
             },
         )
 
-        # Create a placeholder Source for each Movie
         Source.objects.get_or_create(
             movie=movie_obj,
             url="https://example.com/movie-placeholder.mp4",
@@ -122,8 +118,8 @@ def import_movies_task():
 def update_ratings_task():
     """
     In prod/actual project: 
-      • Query OMDb/TMDb for IMDb rating (using an API key).
-      • Scrape Kinopoisk via an unofficial client.
+      - Query OMDb/TMDb for IMDb rating (using an API key).
+      - Scrape Kinopoisk via an unofficial client.
     Here: placeholder sets all ratings to 5.0.
     """
     for m in Movie.objects.all():
@@ -140,8 +136,8 @@ def update_ratings_task():
 def validate_sources_task():
     """
     In prod/actual project:
-      • Use a HEAD (or GET) request to each Source.url.
-      • If non-200, set is_active=False, optionally store a 'last_checked' timestamp.
+      - Use a HEAD (or GET) request to each Source.url.
+      - If non-200, set is_active=False, optionally store a 'last_checked' timestamp.
     Here: placeholder will mark any non-200 or exception as inactive.
     """
     for src in Source.objects.all():
