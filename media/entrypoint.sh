@@ -8,6 +8,8 @@ echo "==> Applying migrations…"
 python manage.py migrate --noinput
 
 if [ "$1" = "python" ]; then
+  echo "==> Applying migrations…"
+  python manage.py migrate --noinput
 
   if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && \
      [ -n "$DJANGO_SUPERUSER_EMAIL" ] && \
@@ -42,7 +44,7 @@ END_SCRIPT
   fi
 
 else
-  echo "==> Not running as 'python'; skipping superuser creation in Celery container."
+  echo "==> Not running migrations or superuser creation."
 fi
 
 exec "$@"
