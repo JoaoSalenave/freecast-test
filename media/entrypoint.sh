@@ -7,8 +7,6 @@ cd /app/media
 echo "==> Applying migrations…"
 python manage.py migrate --noinput
 
-export DJANGO_SETTINGS_MODULE=backend.settings
-
 if [ "$1" = "python" ]; then
 
   if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && \

@@ -1,0 +1,2 @@
+# Force Unix line endings for shell scripts
+media/entrypoint.sh text eol=lf
