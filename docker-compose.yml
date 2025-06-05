@@ -1,0 +1,73 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  media:
+    build:
+      context: .
+      dockerfile: media/Dockerfile
+    container_name: media_app
+    volumes:
+      - ./media:/app/media
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    ports:
+      - "8000:8000"
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  worker:
+    build:
+      context: .
+      dockerfile: media/Dockerfile
+    container_name: celery_worker
+    volumes:
+      - ./media:/app/media
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    command:
+      [
+        "celery",
+        "-A",
+        "celery_app",
+        "worker",
+        "--beat",
+        "--pool=solo",
+        "--loglevel=info"
+      ]
+
+  service:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    container_name: fastapi_service
+    volumes:
+      - ./media:/app/media
+      - ./service:/app/service
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - media
+    ports:
+      - "8001:8001"
+    command:
+      [
+        "uvicorn",
+        "service.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8001"
+      ]
