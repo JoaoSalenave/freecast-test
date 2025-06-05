@@ -1,7 +1,9 @@
+from celery_app import app
 from celery import shared_task
 from catalog.models import Show, Season, Episode, Movie, Source
 import requests
 from datetime import datetime, date
+import random
 
 @shared_task
 def import_shows_task():
@@ -12,6 +14,7 @@ def import_shows_task():
        - Create two Seasons (Season 1 and Season 2).
        - In each Season, create two Episodes (Episode 1 and Episode 2).
        - For each Episode, create one dummy Source.
+       - Set kinopoisk_rating to 0.0 (placeholder).
     """
     url = "https://channelsapi.s3.amazonaws.com/media/test/shows.json"
     response = requests.get(url)
@@ -119,16 +122,16 @@ def update_ratings_task():
     """
     In prod/actual project: 
       - Query OMDb/TMDb for IMDb rating (using an API key).
-      - Scrape Kinopoisk via an unofficial client.
-    Here: placeholder sets all ratings to 5.0.
+      - Scrape Kinopoisk, or related.
+    Here: placeholder sets all ratings to random value between 5.0 and 9.0.
     """
     for m in Movie.objects.all():
-        # TODO: replace this with a real API call fetch kinopoisk_rating.
-        m.kinopoisk_rating = 5.0
+        ## TODO: replace this with a real API call fetch kinopoisk_rating.
+        m.kinopoisk_rating = round(random.uniform(5.0, 9.0), 1)
         m.save()
     for s in Show.objects.all():
-        # TODO: same as above
-        s.kinopoisk_rating = 5.0
+        ## TODO: same as above
+        s.kinopoisk_rating = round(random.uniform(5.0, 9.0), 1)
         s.save()
 
 
