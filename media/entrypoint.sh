@@ -1,11 +1,7 @@
 #!/bin/sh
-
 set -e
 
 cd /app/media
-
-echo "==> Applying migrations…"
-python manage.py migrate --noinput
 
 if [ "$1" = "python" ]; then
   echo "==> Applying migrations…"
@@ -42,7 +38,6 @@ END_SCRIPT
   else
     echo "==> DJANGO_SUPERUSER_* not fully set; skipping superuser creation."
   fi
-
 else
   echo "==> Not running migrations or superuser creation."
 fi
