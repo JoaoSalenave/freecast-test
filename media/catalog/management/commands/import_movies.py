@@ -1,19 +1,9 @@
 from django.core.management.base import BaseCommand
-import celery_app 
 from catalog.tasks import import_movies_task
-from celery.exceptions import CeleryError
 
 class Command(BaseCommand):
-    help = "Run import_movies_task (via Celery if possible; otherwise run synchronously)"
+    help = "Run import_movies_task synchronously (no Celery)"
 
     def handle(self, *args, **kwargs):
-        try:
-            import_movies_task.delay()
-            self.stdout.write(self.style.SUCCESS("import_movies_task enqueued to Celery"))
-        except (CeleryError, ConnectionError) as e:
-            self.stdout.write(self.style.WARNING(
-                "WARNING: could not enqueue task. "
-                "Broker down? Running import_movies_task synchronously…"
-            ))
-            import_movies_task()
-            self.stdout.write(self.style.SUCCESS("import_movie_task completed synchronously"))
+        import_movies_task()
+        self.stdout.write(self.style.SUCCESS("import_movies_task completed synchronously"))

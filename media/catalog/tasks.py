@@ -1,4 +1,3 @@
-from celery_app import app
 from celery import shared_task
 from catalog.models import Show, Season, Episode, Movie, Source
 import requests
